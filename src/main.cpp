@@ -5,19 +5,29 @@
 
 using namespace std;
 
-int main()
-{
-    termios oldt;
-    tcgetattr(STDIN_FILENO, &oldt);
-    termios newt = oldt;
-    newt.c_lflag &= ~ECHO;
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+string prompt(const string& text = "Enter password: ") {
+  string pass;
+  cout << text;
 
-    string s;
-    string hide;
-    getline(cin, s);
+  termios oldt;
+  tcgetattr(STDIN_FILENO, &oldt);
+  termios newt = oldt;
+  newt.c_lflag &= ~ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
-    hide.append(s.size(), '*');
-    cout << hide << endl;
-    return 0;
+  string hide;
+  getline(cin, pass);
+
+  hide.append(pass.size(), '*');
+  cout << hide << endl;
+  
+  return pass;
+}
+
+int main() {
+  string real = "AaBbCcDdEe";
+  string typed = prompt();
+
+  if (real==typed) cout << "Correct password." << endl;
+  else cout << "You got it wrong man!" << endl;
 }//main 
